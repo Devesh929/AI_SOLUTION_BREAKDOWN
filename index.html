@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Network Shield - Solution Breakdown</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- GSAP for Advanced Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #030712; /* Darker than slate-900 */
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Abstract glowing background */
+        .glow-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 15% 50%, rgba(0, 167, 167, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+            filter: blur(80px);
+            animation: pulseBg 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseBg {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 167, 167, 0.4);
+            box-shadow: 0 20px 40px -10px rgba(0, 167, 167, 0.2);
+            background: rgba(30, 41, 59, 0.6);
+        }
+
+        /* Animated Grid Lines */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            transform: perspective(500px) rotateX(60deg);
+            transform-origin: top;
+            animation: moveGrid 15s linear infinite;
+        }
+
+        @keyframes moveGrid {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 50px; }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00A7A7;
+        }
+
+        /* Connecting Lines */
+        .connector-line {
+            position: absolute;
+            width: 2px;
+            background: linear-gradient(to bottom, #00A7A7, transparent);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: -1;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-teal-500 selection:text-white">
+
+    <div class="glow-bg"></div>
+    <!-- <div class="grid-overlay"></div> -->
+
+    <!-- Hero Section -->
+    <header class="min-h-screen flex flex-col justify-center items-center text-center relative px-6 py-20 overflow-hidden">
+        
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-[0.05] mix-blend-screen"></div>
+
+        <div class="z-10 max-w-5xl hero-content opacity-0 translate-y-10">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-400 font-semibold tracking-wide text-sm mb-8 animate-bounce">
+                <i data-lucide="shield-check" class="w-4 h-4"></i> Architecture Breakdown
+            </div>
+            
+            <h1 class="text-6xl md:text-8xl font-extrabold tracking-tight mb-6 leading-tight">
+                AI Network <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-300">Shield</span>
+            </h1>
+            
+            <p class="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto font-light leading-relaxed mb-12">
+                A highly scalable, multi-modal forensic architecture designed to detect deepfakes, synthetic voices, and pump-and-dump schemes across the financial web.
+            </p>
+
+            <a href="#architecture" class="inline-flex items-center gap-2 px-8 py-4 bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold rounded-full transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(20,184,166,0.4)]">
+                Explore The Architecture
+                <i data-lucide="arrow-down" class="w-5 h-5"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Architecture Section -->
+    <section id="architecture" class="py-24 px-6 relative">
+        <div class="max-w-7xl mx-auto">
+            
+            <div class="text-center mb-24 section-header opacity-0">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Core Components</h2>
+                <div class="h-1 w-24 bg-teal-500 mx-auto rounded-full"></div>
+            </div>
+
+            <div class="relative flex flex-col gap-32">
+                <!-- Central Connector Line -->
+                <div class="hidden lg:block connector-line h-full top-0"></div>
+
+                <!-- Component 1 -->
+                <div class="relative flex flex-col lg:flex-row items-center gap-12 lg:gap-24 arch-card opacity-0">
+                    <div class="lg:w-1/2 flex justify-end">
+                        <div class="glass-card p-10 w-full lg:max-w-xl text-right relative group">
+                            <div class="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-teal-500 rounded-full border-4 border-slate-900 hidden lg:flex items-center justify-center z-10 group-hover:scale-110 transition-transform">
+                                <i data-lucide="layout-dashboard" class="text-slate-900 w-5 h-5"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-white mb-4">Universal Control Platform</h3>
+                            <h4 class="text-teal-400 font-semibold mb-6">Next.js • TailwindCSS</h4>
+                            <p class="text-slate-300 leading-relaxed text-lg">
+                                The centralized command center for analysts. Features real-time threat intelligence dashboards, forensic evidence viewers, and node-based visualization of decentralized scam networks using force-directed graphs.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="lg:w-1/2 w-full">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop" alt="Dashboard" class="rounded-2xl border border-slate-700 shadow-2xl opacity-80 hover:opacity-100 transition-opacity duration-500">
+                    </div>
+                </div>
+
+                <!-- Component 2 -->
+                <div class="relative flex flex-col lg:flex-row-reverse items-center gap-12 lg:gap-24 arch-card opacity-0">
+                    <div class="lg:w-1/2 flex justify-start">
+                        <div class="glass-card p-10 w-full lg:max-w-xl text-left relative group">
+                            <div class="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-purple-500 rounded-full border-4 border-slate-900 hidden lg:flex items-center justify-center z-10 group-hover:scale-110 transition-transform">
+                                <i data-lucide="smartphone" class="text-slate-900 w-5 h-5"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-white mb-4">Agentic Mobile Overlay</h3>
+                            <h4 class="text-purple-400 font-semibold mb-6">Kotlin • React Native Edge</h4>
+                            <p class="text-slate-300 leading-relaxed text-lg">
+                                A frictionless background service for Android. Uses `SYSTEM_ALERT_WINDOW` to draw a floating AI agent over social media apps. With a single tap, it captures screen telemetry and triggers deep analysis without the user ever leaving Instagram or Telegram.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="lg:w-1/2 w-full flex justify-end">
+                        <img src="https://images.unsplash.com/photo-1616423640778-28d1b53229bd?q=80&w=1000&auto=format&fit=crop" alt="Mobile App" class="rounded-2xl border border-slate-700 shadow-2xl opacity-80 hover:opacity-100 transition-opacity duration-500">
+                    </div>
+                </div>
+
+                <!-- Component 3 -->
+                <div class="relative flex flex-col lg:flex-row items-center gap-12 lg:gap-24 arch-card opacity-0">
+                    <div class="lg:w-1/2 flex justify-end">
+                        <div class="glass-card p-10 w-full lg:max-w-xl text-right relative group">
+                            <div class="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-blue-500 rounded-full border-4 border-slate-900 hidden lg:flex items-center justify-center z-10 group-hover:scale-110 transition-transform">
+                                <i data-lucide="cloud-lightning" class="text-slate-900 w-5 h-5"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-white mb-4">Distributed Scalable Crawlers</h3>
+                            <h4 class="text-blue-400 font-semibold mb-6">AWS EKS • Celery • S3</h4>
+                            <p class="text-slate-300 leading-relaxed text-lg">
+                                Containerized extraction workers deployed on Kubernetes. They asynchronously scrape raw video payloads from YouTube, Telegram (via Telethon), and Instagram, instantly piping massive media blobs directly into AWS S3 storage arrays.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="lg:w-1/2 w-full">
+                        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000&auto=format&fit=crop" alt="Cloud" class="rounded-2xl border border-slate-700 shadow-2xl opacity-80 hover:opacity-100 transition-opacity duration-500">
+                    </div>
+                </div>
+
+                <!-- Component 4 -->
+                <div class="relative flex flex-col lg:flex-row-reverse items-center gap-12 lg:gap-24 arch-card opacity-0">
+                    <div class="lg:w-1/2 flex justify-start">
+                        <div class="glass-card p-10 w-full lg:max-w-xl text-left relative group">
+                            <div class="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-rose-500 rounded-full border-4 border-slate-900 hidden lg:flex items-center justify-center z-10 group-hover:scale-110 transition-transform">
+                                <i data-lucide="brain-circuit" class="text-slate-900 w-5 h-5"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-white mb-4">Multi-Modal AI Engine</h3>
+                            <h4 class="text-rose-400 font-semibold mb-6">LLaVA • Mistral-7B • PyAnnote</h4>
+                            <p class="text-slate-300 leading-relaxed text-lg mb-4">
+                                The brain of the operation. Running on GPU-tainted EKS nodes with BitsAndBytes 4-bit quantization, this pipeline analyzes visual deepfakes via LLaVA, extracts overlapping audio with Whisper, and diarizes speakers.
+                            </p>
+                            <p class="text-slate-300 leading-relaxed text-lg">
+                                Finally, a Hybrid RAG setup using LangChain and Cross-Encoders feeds historical forensic data into Mistral-7B to output a strictly JSON-formatted threat verdict.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="lg:w-1/2 w-full flex justify-end">
+                        <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1000&auto=format&fit=crop" alt="AI Brain" class="rounded-2xl border border-slate-700 shadow-2xl opacity-80 hover:opacity-100 transition-opacity duration-500">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-slate-800 text-center text-slate-500 mt-20">
+        <p class="mb-4">Designed & Built for Vercel Deployment</p>
+        <div class="flex justify-center gap-4">
+            <a href="#" class="hover:text-teal-400 transition-colors"><i data-lucide="github"></i></a>
+            <a href="#" class="hover:text-teal-400 transition-colors"><i data-lucide="twitter"></i></a>
+        </div>
+    </footer>
+
+    <!-- Initialize Scripts -->
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Hero Intro Animation
+        gsap.to(".hero-content", {
+            y: 0,
+            opacity: 1,
+            duration: 1.5,
+            ease: "power4.out"
+        });
+
+        // Section Header Reveal
+        gsap.to(".section-header", {
+            scrollTrigger: {
+                trigger: ".section-header",
+                start: "top 80%",
+            },
+            y: -20,
+            opacity: 1,
+            duration: 1,
+            ease: "power3.out"
+        });
+
+        // Cards Staggered Reveal
+        const cards = gsap.utils.toArray('.arch-card');
+        
+        cards.forEach((card, i) => {
+            gsap.to(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 75%",
+                    toggleActions: "play none none reverse"
+                },
+                y: 0,
+                opacity: 1,
+                duration: 1.2,
+                ease: "power3.out"
+            });
+        });
+    </script>
+</body>
+</html>
