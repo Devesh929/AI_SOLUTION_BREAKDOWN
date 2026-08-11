@@ -56,7 +56,7 @@ h2{font-size:38px;line-height:1.05;margin:7px 0 10px;letter-spacing:-1.2px}
 .lab-top small{color:#8ca0b7}.lab-chip{font-size:10px;border:1px solid #2c425a;padding:6px 8px;border-radius:7px;color:#9edbff}
 .frame-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
 .frame{height:154px;border-radius:10px;overflow:hidden;position:relative;background:#111f2e;border:1px solid #273a50}
-.frame img{width:100%;height:100%;object-fit:cover;filter:saturate(.85) contrast(1.04)}
+.frame img{width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(.9) contrast(1.04)}
 .frame:before{content:"";position:absolute;z-index:2;border:2px solid var(--red);border-radius:5px;width:37%;height:23%;left:31%;top:52%;box-shadow:0 0 0 1000px rgba(0,0,0,.06)}
 .frame.hand:before{width:30%;height:33%;left:61%;top:33%;border-color:#f8b64f}
 .frame small{position:absolute;z-index:3;left:7px;bottom:6px;background:#06101ac9;padding:3px 5px;border-radius:4px;font-size:8px;color:#ccd9e6}
@@ -181,6 +181,10 @@ footer{background:#0d1a2b;color:#c9d6e5;padding:28px 0;font-size:11px}footer a{c
     <div class="lab reveal">
       <div class="lab-top"><div><b>Frame-by-frame visual inspection</b><br><small>Example workflow inspired by fact-check investigations</small></div><span class="lab-chip">5 frames sampled</span></div>
       <div class="frame-strip" id="frameStrip"></div>
+      <div style="margin:10px 0 0;color:#86a0b9;font-size:9px;line-height:1.4">
+        Offline demo frames embedded inside this HTML so the forensic sequence renders even without internet access.
+        The visual checks mirror the type of keyframe comparison, lip-region distortion review, and source-video reconstruction documented in the linked Uday Kotak fact-check.
+      </div>
       <div class="lab-callouts">
         <div><b>Lip / jaw boundary</b>Blur, quiver and inconsistent mouth geometry.</div>
         <div><b>Hand / face interaction</b>Finger merging and occlusion inconsistencies.</div>
@@ -361,17 +365,30 @@ const articles=[{"name": "Uday Kotak investment-platform deepfake", "url": "http
 const evidenceGrid=document.getElementById('evidenceGrid');
 articles.forEach((a,i)=>{
   const shot='https://image.thum.io/get/width/900/crop/520/noanimate/'+encodeURIComponent(a.url);
-  evidenceGrid.insertAdjacentHTML('beforeend',`<article class="evidence reveal"><div class="shot"><img src="${shot}" onerror="this.style.display='none'"></div><div class="body"><span class="tag">Case evidence ${i+1}</span><h4>${a.name}</h4><p>${a.fact}</p><a href="${a.url}" target="_blank" style="font-size:10px;color:#2457ff;text-decoration:none;font-weight:700">Open investigation ↗</a></div></article>`);
+  evidenceGrid.insertAdjacentHTML('beforeend',`<article class="evidence reveal"><div class="shot" style="display:grid;place-items:center;padding:18px;background:linear-gradient(135deg,#eef4ff,#f7f9fc)"><div style="text-align:left;width:100%"><div style="font-size:10px;color:#2457ff;font-weight:800;text-transform:uppercase;letter-spacing:.7px">NEWS CHECKER · AI/DEEPFAKE</div><div style="font-size:17px;line-height:1.15;font-weight:850;margin-top:10px;color:#14223a">${a.name}</div><div style="font-size:10px;color:#77879b;margin-top:10px">Verified fact-check evidence</div></div></div><div class="body"><span class="tag">Case evidence ${i+1}</span><h4>${a.name}</h4><p>${a.fact}</p><a href="${a.url}" target="_blank" style="font-size:10px;color:#2457ff;text-decoration:none;font-weight:700">Open investigation ↗</a></div></article>`);
 });
 
 // Frame strip uses the first evidence-page preview as a visual reference; CSS overlays focus zones.
 const frameStrip=document.getElementById('frameStrip');
-const base='https://image.thum.io/get/width/900/crop/520/noanimate/'+encodeURIComponent(articles[0].url);
-['00:06','00:11','00:15','00:18','00:22'].forEach((t,i)=>{
-  const cls=i===3?'frame hand':'frame';
-  frameStrip.insertAdjacentHTML('beforeend',`<div class="${cls}"><img src="${base}" style="object-position:${20+i*14}% 35%" onerror="this.style.opacity=.15"><small>${t} · ${
-    i===1?'jaw blur':i===2?'lip boundary':i===3?'hand / face':i===4?'temporal mismatch':'reference frame'
-  }</small></div>`);
+const embeddedForensicFrames = [
+  "images/frame_01_reference.png",
+  "images/frame_02_jaw_blur.png",
+  "images/frame_03_lip_boundary.png",
+  "images/frame_04_hand_face.png",
+  "images/frame_05_temporal.png"
+];
+const forensicLabels=[
+  ['00:06','reference frame',''],
+  ['00:11','jaw / lip blur',''],
+  ['00:15','lip boundary anomaly',''],
+  ['00:18','hand / face interaction','hand'],
+  ['00:22','temporal mismatch','']
+];
+forensicLabels.forEach((row,i)=>{
+  const [t,label,extra]=row;
+  frameStrip.insertAdjacentHTML('beforeend',
+    `<div class="frame ${extra}"><img src="${embeddedForensicFrames[i]}" alt="${label}"><small>${t} · ${label}</small></div>`
+  );
 });
 
 // Animated audio waveform
